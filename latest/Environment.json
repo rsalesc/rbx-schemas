@@ -461,6 +461,18 @@
                     ],
                     "default": null,
                     "description": "Environment-level extensions for BOCA packaging."
+                },
+                "moj": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/MojExtension"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Environment-level extensions for MOJ packaging."
                 }
             },
             "title": "Extensions",
@@ -759,6 +771,26 @@
                 "name"
             ],
             "title": "LinterConfig",
+            "type": "object"
+        },
+        "MojExtension": {
+            "description": "Environment-level extensions for MOJ packaging.",
+            "properties": {
+                "org": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "The MOJ org to upload the package to, as `<org>#<problem>`. Leave unset to upload under your own login, which is a private personal org nobody else can see.",
+                    "title": "Org"
+                }
+            },
+            "title": "MojExtension",
             "type": "object"
         },
         "MojLanguageExtension": {
