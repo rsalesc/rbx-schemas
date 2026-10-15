@@ -267,7 +267,7 @@
             "type": "string"
         },
         "min_version": {
-            "default": "1.0.0",
+            "default": "2.0.0",
             "title": "Min Version",
             "type": "string"
         },
