@@ -148,6 +148,595 @@
             "title": "BocaLanguageExtension",
             "type": "object"
         },
+        "CmsContestSettings": {
+            "description": "Settings of the CMS contest itself.\n\nThe limits here count across all tasks.",
+            "properties": {
+                "maxSubmissionNumber": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Most submissions a contestant may make (`max_submission_number`).",
+                    "title": "Maxsubmissionnumber"
+                },
+                "maxUserTestNumber": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Most user tests a contestant may run (`max_user_test_number`).",
+                    "title": "Maxusertestnumber"
+                },
+                "minSubmissionInterval": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Seconds a contestant must wait between two submissions (`min_submission_interval`).",
+                    "title": "Minsubmissioninterval"
+                },
+                "minUserTestInterval": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Seconds a contestant must wait between two user tests (`min_user_test_interval`).",
+                    "title": "Minusertestinterval"
+                },
+                "scorePrecision": {
+                    "anyOf": [
+                        {
+                            "minimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Decimal places scores are shown with (`score_precision`).",
+                    "title": "Scoreprecision"
+                },
+                "tokens": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/CmsTokens"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Tokens. A contestant may use one on a task only when both the contest and the task allow it."
+                },
+                "start": {
+                    "anyOf": [
+                        {
+                            "format": "date-time",
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "When the contest starts (`start`), with a UTC offset, such as `2026-09-28T08:00:00-03:00`. `contest.rbx.yml` only.",
+                    "title": "Start"
+                },
+                "stop": {
+                    "anyOf": [
+                        {
+                            "format": "date-time",
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "When the contest ends (`stop`), with a UTC offset. `contest.rbx.yml` only.",
+                    "title": "Stop"
+                },
+                "perUserTime": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Seconds each contestant gets, starting when they choose to, within the contest window (`per_user_time`). `contest.rbx.yml` only.",
+                    "title": "Perusertime"
+                },
+                "timezone": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "IANA name of the timezone CMS shows times in (`timezone`), such as `America/Sao_Paulo`. Separate from the UTC offsets on `start` and `stop`.",
+                    "title": "Timezone"
+                },
+                "allowUserTests": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Whether contestants may run their code on their own inputs (`allow_user_tests`).",
+                    "title": "Allowusertests"
+                },
+                "allowQuestions": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Whether contestants may ask questions (`allow_questions`).",
+                    "title": "Allowquestions"
+                },
+                "submissionsDownloadAllowed": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Whether contestants may download their submissions (`submissions_download_allowed`).",
+                    "title": "Submissionsdownloadallowed"
+                },
+                "allowPasswordAuthentication": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Whether contestants may log in with a password (`allow_password_authentication`).",
+                    "title": "Allowpasswordauthentication"
+                },
+                "allowRegistration": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Whether people may register themselves (`allow_registration`).",
+                    "title": "Allowregistration"
+                },
+                "ipRestriction": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Whether a contestant may log in only from their own IP addresses (`ip_restriction`).",
+                    "title": "Iprestriction"
+                },
+                "ipAutologin": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Whether a contestant is logged in from their IP address, without a password (`ip_autologin`).",
+                    "title": "Ipautologin"
+                },
+                "blockHiddenParticipations": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Whether hidden participations are kept from logging in (`block_hidden_participations`).",
+                    "title": "Blockhiddenparticipations"
+                },
+                "allowedLocalizations": {
+                    "anyOf": [
+                        {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Interface languages contestants may pick, such as `en` and `pt_BR` (`allowed_localizations`). Unset or empty allows them all.",
+                    "title": "Allowedlocalizations"
+                }
+            },
+            "title": "CmsContestSettings",
+            "type": "object"
+        },
+        "CmsEnvironmentExtension": {
+            "description": "CMS settings in `env.rbx.yml`: a preset's defaults, without a schedule.",
+            "properties": {
+                "contest": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/CmsContestSettings"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Settings of the CMS contest itself."
+                },
+                "task": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/CmsTaskSettings"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Settings applied to every task of the contest."
+                }
+            },
+            "title": "CmsEnvironmentExtension",
+            "type": "object"
+        },
+        "CmsFeedbackLevel": {
+            "enum": [
+                "full",
+                "restricted"
+            ],
+            "title": "CmsFeedbackLevel",
+            "type": "string"
+        },
+        "CmsLanguageExtension": {
+            "description": "CMS settings of one language in `env.rbx.yml`.",
+            "properties": {
+                "languages": {
+                    "anyOf": [
+                        {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "CMS languages this rbx language maps to, by the exact name CMS gives them, such as `C++20 / g++`, `Java / JDK` or `Python 3 / PyPy`. A contest package allows every language of every rbx language's list. Unset, or empty, means the language has no CMS counterpart.",
+                    "title": "Languages"
+                },
+                "flags": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Flags `g++` gets when the CMS host compiles a checker or interactor written in this language, such as `-std=gnu++17 -O2`. rbx always adds `-static` and the include and define flags it needs. Unset means `-std=gnu++20 -O2`. Graders and stubs are compiled by CMS with its own per-language commands, which this does not change.",
+                    "title": "Flags"
+                }
+            },
+            "title": "CmsLanguageExtension",
+            "type": "object"
+        },
+        "CmsPublicTestcases": {
+            "enum": [
+                "samples",
+                "all",
+                "none"
+            ],
+            "title": "CmsPublicTestcases",
+            "type": "string"
+        },
+        "CmsScoreMode": {
+            "enum": [
+                "max",
+                "maxSubtask",
+                "maxTokenedLast"
+            ],
+            "title": "CmsScoreMode",
+            "type": "string"
+        },
+        "CmsTaskSettings": {
+            "description": "Settings applied to every task of the contest.\n\nThe limits here apply to each task separately.",
+            "properties": {
+                "maxSubmissionNumber": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Most submissions a contestant may make (`max_submission_number`).",
+                    "title": "Maxsubmissionnumber"
+                },
+                "maxUserTestNumber": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Most user tests a contestant may run (`max_user_test_number`).",
+                    "title": "Maxusertestnumber"
+                },
+                "minSubmissionInterval": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Seconds a contestant must wait between two submissions (`min_submission_interval`).",
+                    "title": "Minsubmissioninterval"
+                },
+                "minUserTestInterval": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Seconds a contestant must wait between two user tests (`min_user_test_interval`).",
+                    "title": "Minusertestinterval"
+                },
+                "scorePrecision": {
+                    "anyOf": [
+                        {
+                            "minimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Decimal places scores are shown with (`score_precision`).",
+                    "title": "Scoreprecision"
+                },
+                "tokens": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/CmsTokens"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Tokens. A contestant may use one on a task only when both the contest and the task allow it."
+                },
+                "scoreMode": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/CmsScoreMode"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "How the task score comes out of a contestant's submissions (`score_mode`). `max`: the best submission. `maxSubtask`: the best score on each subtask, summed across submissions. `maxTokenedLast`: the best of the tokened submissions and the last one. Defaults to `max`, which is what rbx means by a solution's score; CMS's own default is `maxTokenedLast`."
+                },
+                "feedbackLevel": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/CmsFeedbackLevel"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "How much contestants see about a submission on its public testcases (`feedback_level`). `full`: every testcase's outcome, time and memory. `restricted`: less."
+                },
+                "publicTestcases": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/CmsPublicTestcases"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Which testcases contestants see results for. `samples`: the tests of the `samples` group. `all`: every test. `none`: no test. Defaults to `samples`."
+                }
+            },
+            "title": "CmsTaskSettings",
+            "type": "object"
+        },
+        "CmsTokenMode": {
+            "enum": [
+                "disabled",
+                "finite",
+                "infinite"
+            ],
+            "title": "CmsTokenMode",
+            "type": "string"
+        },
+        "CmsTokens": {
+            "description": "CMS tokens. Replaced as a whole when a contest overrides a preset.",
+            "properties": {
+                "mode": {
+                    "$ref": "#/$defs/CmsTokenMode",
+                    "description": "`disabled`: no tokens. `infinite`: a contestant may token every submission. `finite`: tokens are generated over time, as the fields below say. Written to CMS's `token_mode`."
+                },
+                "maxNumber": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Most tokens a contestant may use in total (`token_max_number`). Unset means no cap. `finite` mode only.",
+                    "title": "Maxnumber"
+                },
+                "minInterval": {
+                    "anyOf": [
+                        {
+                            "minimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Seconds a contestant must wait between two tokens (`token_min_interval`). `finite` mode only.",
+                    "title": "Mininterval"
+                },
+                "genInitial": {
+                    "anyOf": [
+                        {
+                            "minimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Tokens a contestant starts with (`token_gen_initial`). `finite` mode only.",
+                    "title": "Geninitial"
+                },
+                "genNumber": {
+                    "anyOf": [
+                        {
+                            "minimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Tokens generated every `genInterval` (`token_gen_number`). `finite` mode only.",
+                    "title": "Gennumber"
+                },
+                "genInterval": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Seconds between two generations (`token_gen_interval`). `finite` mode only.",
+                    "title": "Geninterval"
+                },
+                "genMax": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Most tokens a contestant may hold at once (`token_gen_max`). Unset means no cap. `finite` mode only.",
+                    "title": "Genmax"
+                }
+            },
+            "required": [
+                "mode"
+            ],
+            "title": "CmsTokens",
+            "type": "object"
+        },
         "CompilationConfig": {
             "properties": {
                 "commands": {
@@ -316,6 +905,17 @@
                 }
             },
             "title": "DomjudgeLanguageExtension",
+            "type": "object"
+        },
+        "EnvironmentIssuesConfig": {
+            "description": "The `issues:` block of `env.rbx.yml`.",
+            "properties": {
+                "thresholds": {
+                    "$ref": "#/$defs/IssueThresholds",
+                    "description": "Thresholds for the issues that measure a size or a duration."
+                }
+            },
+            "title": "EnvironmentIssuesConfig",
             "type": "object"
         },
         "EnvironmentLanguage": {
@@ -617,6 +1217,18 @@
                     ],
                     "default": null,
                     "description": "Environment-level extensions for DOMjudge tooling."
+                },
+                "cms": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/CmsEnvironmentExtension"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Default CMS contest and task settings, which a contest overrides field by field."
                 }
             },
             "title": "Extensions",
@@ -662,6 +1274,48 @@
                 }
             },
             "title": "FileMapping",
+            "type": "object"
+        },
+        "IssueThresholds": {
+            "description": "How large or slow something may be before an issue reports it.",
+            "properties": {
+                "testsetSizeMb": {
+                    "default": 200,
+                    "description": "Largest total size, in MiB, of the built testset (every input plus\nevery expected answer) before `large-testset` is reported.",
+                    "exclusiveMinimum": 0,
+                    "title": "Testsetsizemb",
+                    "type": "number"
+                },
+                "testcaseInputSizeMb": {
+                    "default": 20,
+                    "description": "Largest size, in MiB, of a single built input before `large-testcase`\nis reported.",
+                    "exclusiveMinimum": 0,
+                    "title": "Testcaseinputsizemb",
+                    "type": "number"
+                },
+                "testcaseAnswerSizeMb": {
+                    "default": 20,
+                    "description": "Largest size, in MiB, of a single expected answer before\n`large-testcase` is reported.",
+                    "exclusiveMinimum": 0,
+                    "title": "Testcaseanswersizemb",
+                    "type": "number"
+                },
+                "acceptedTotalTimeSeconds": {
+                    "default": 60,
+                    "description": "Largest total CPU time, in seconds, an accepted solution may spend\nover the whole testset before `slow-accepted-solution` is reported.",
+                    "exclusiveMinimum": 0,
+                    "title": "Acceptedtotaltimeseconds",
+                    "type": "number"
+                },
+                "stderrSizeMb": {
+                    "default": 1,
+                    "description": "Largest stderr, in MiB, a solution may write on a single testcase\nbefore `noisy-stderr` is reported.",
+                    "exclusiveMinimum": 0,
+                    "title": "Stderrsizemb",
+                    "type": "number"
+                }
+            },
+            "title": "IssueThresholds",
             "type": "object"
         },
         "LanguageExtensions": {
@@ -713,6 +1367,18 @@
                     ],
                     "default": null,
                     "description": "Language-level extensions for DOMjudge tooling."
+                },
+                "cms": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/CmsLanguageExtension"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Language-level extensions for CMS: the CMS languages it maps to."
                 }
             },
             "title": "LanguageExtensions",
@@ -1291,6 +1957,10 @@
             "format": "path",
             "title": "Builddir",
             "type": "string"
+        },
+        "issues": {
+            "$ref": "#/$defs/EnvironmentIssuesConfig",
+            "description": "How large or slow things may get before `rbx issues` reports them."
         }
     },
     "title": "Environment",

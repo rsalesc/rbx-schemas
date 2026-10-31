@@ -112,6 +112,26 @@
             "title": "Library",
             "type": "object"
         },
+        "PackageSymlink": {
+            "properties": {
+                "path": {
+                    "format": "path",
+                    "title": "Path",
+                    "type": "string"
+                },
+                "target": {
+                    "format": "path",
+                    "title": "Target",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "path",
+                "target"
+            ],
+            "title": "PackageSymlink",
+            "type": "object"
+        },
         "PackageVariant": {
             "properties": {
                 "id": {
@@ -154,6 +174,14 @@
                     },
                     "title": "Expansion",
                     "type": "array"
+                },
+                "symlinks": {
+                    "default": [],
+                    "items": {
+                        "$ref": "#/$defs/PackageSymlink"
+                    },
+                    "title": "Symlinks",
+                    "type": "array"
                 }
             },
             "required": [
@@ -165,10 +193,33 @@
         },
         "ReplacementMode": {
             "enum": [
-                "PROMPT"
+                "PROMPT",
+                "RANDOM_HEX"
             ],
             "title": "ReplacementMode",
             "type": "string"
+        },
+        "Symlinks": {
+            "properties": {
+                "problem": {
+                    "default": [],
+                    "items": {
+                        "$ref": "#/$defs/PackageSymlink"
+                    },
+                    "title": "Problem",
+                    "type": "array"
+                },
+                "contest": {
+                    "default": [],
+                    "items": {
+                        "$ref": "#/$defs/PackageSymlink"
+                    },
+                    "title": "Contest",
+                    "type": "array"
+                }
+            },
+            "title": "Symlinks",
+            "type": "object"
         },
         "TrackedAsset": {
             "properties": {
@@ -232,6 +283,13 @@
                     ],
                     "default": null,
                     "title": "Prompt"
+                },
+                "length": {
+                    "default": 32,
+                    "maximum": 256,
+                    "minimum": 1,
+                    "title": "Length",
+                    "type": "integer"
                 },
                 "glob": {
                     "default": [],
@@ -318,6 +376,9 @@
         },
         "libraries": {
             "$ref": "#/$defs/Libraries"
+        },
+        "symlinks": {
+            "$ref": "#/$defs/Symlinks"
         },
         "problemVariants": {
             "items": {

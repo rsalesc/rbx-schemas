@@ -1,5 +1,13 @@
 {
     "$defs": {
+        "Aggregation": {
+            "enum": [
+                "MIN",
+                "SUM"
+            ],
+            "title": "Aggregation",
+            "type": "string"
+        },
         "Checker": {
             "properties": {
                 "path": {
@@ -187,6 +195,15 @@
             "title": "CodeItem",
             "type": "object"
         },
+        "DependencyPolicy": {
+            "enum": [
+                "MANUAL",
+                "SAMPLES",
+                "LADDER"
+            ],
+            "title": "DependencyPolicy",
+            "type": "string"
+        },
         "ExpectedOutcome": {
             "enum": [
                 "ANY",
@@ -194,6 +211,7 @@
                 "ACCEPTED_OR_TLE",
                 "WRONG_ANSWER",
                 "INCORRECT",
+                "PARTIALLY_CORRECT",
                 "RUNTIME_ERROR",
                 "TIME_LIMIT_EXCEEDED",
                 "MEMORY_LIMIT_EXCEEDED",
@@ -206,6 +224,40 @@
             ],
             "title": "ExpectedOutcome",
             "type": "string"
+        },
+        "FileAttachment": {
+            "properties": {
+                "path": {
+                    "description": "The file to attach, relative to the package directory.",
+                    "format": "path",
+                    "title": "Path",
+                    "type": "string"
+                },
+                "name": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Name of the file inside the attachments archive. Defaults to the basename of `path`.",
+                    "title": "Name"
+                },
+                "stripSecret": {
+                    "default": false,
+                    "description": "\nDerive the contestant version of a C/C++ source: every `// BEGIN SECRET` ...\n`// END SECRET` block is removed, and `#include \"rbx.h\"` is replaced by a public\nshim with no secrets and no vars. The result must compile on its own.\n",
+                    "title": "Stripsecret",
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "path"
+            ],
+            "title": "FileAttachment",
+            "type": "object"
         },
         "Generator": {
             "properties": {
@@ -376,6 +428,114 @@
             "title": "GeneratorScript",
             "type": "object"
         },
+        "Grader": {
+            "description": "A grader compiled together with every solution (IOI function-call tasks).\n\nIn a batch problem it owns `main()`, reads the test and prints what the\nchecker reads. In a communication problem it is the stub that talks to the\ninteractor on the contestant's behalf.",
+            "properties": {
+                "path": {
+                    "description": "The path to the code file, relative to the package directory.",
+                    "format": "path",
+                    "title": "Path",
+                    "type": "string"
+                },
+                "language": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "The language of the code file.",
+                    "title": "Language"
+                },
+                "compilationFiles": {
+                    "anyOf": [
+                        {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": [],
+                    "description": "\nExtra files that should be available during the compilation of the code file,\nsuch as testlib.h, jngen.h, tgen.h, etc.\n\nThe paths should be given relative to the package directory, and are placed at the\nsame package-relative path inside the sandbox (the package directory structure is\nmirrored). This means a code file in a subdirectory can include a file from\nelsewhere in the package via a relative path (e.g. `#include \"../lib.h\"`).\n\nThird-party libraries such as testlib.h, jngen.h and tgen.h are provided by the\npreset's `libraries` configuration (see the preset docs), not auto-injected.\n",
+                    "title": "Compilationfiles"
+                },
+                "executionFiles": {
+                    "anyOf": [
+                        {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": [],
+                    "description": "\nExtra files that should be available at *execution* time, the runtime equivalent of\n`compilationFiles`.\n\nThe paths should be given relative to the package directory, and are placed at the\nsame package-relative path inside the sandbox (the package directory structure is\nmirrored). Use this for runtime companion files a compiled binary or interpreted\nscript needs at run time (data files, sibling modules, etc.).\n\nSibling Python imports and quoted C++ includes are auto-discovered; this field is the\nescape hatch for files that cannot be discovered automatically.\n",
+                    "title": "Executionfiles"
+                },
+                "secret": {
+                    "description": "\nThe secret the grader's hidden test header and output framing are derived from.\nUse a long random string, and keep it out of anything participants receive:\nchanging it changes every judge test and answer.\n",
+                    "minLength": 1,
+                    "title": "Secret",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "path",
+                "secret"
+            ],
+            "title": "Grader",
+            "type": "object"
+        },
+        "IgnoreRule": {
+            "description": "One entry of `issues.ignore`, in its mapping form.",
+            "properties": {
+                "code": {
+                    "$ref": "#/$defs/IssueCode",
+                    "description": "The issue code to silence."
+                },
+                "on": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Silence `code` only for what this glob matches, instead of for the\nwhole problem: a solution or file path (`sols/slow-*.cpp`), a test group name (`small`) or a\ntest (`main/3`), depending on the code. `*` stays within one path segment and `**` spans any\nnumber of them, as in `solutions:`. Omit it to silence the code everywhere.",
+                    "title": "On"
+                },
+                "reason": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Why this is silenced. Shown by `rbx issues --all`.",
+                    "title": "Reason"
+                }
+            },
+            "required": [
+                "code"
+            ],
+            "title": "IgnoreRule",
+            "type": "object"
+        },
         "InferenceRole": {
             "enum": [
                 "LOWER",
@@ -454,6 +614,58 @@
                 "path"
             ],
             "title": "Interactor",
+            "type": "object"
+        },
+        "IssueCode": {
+            "enum": [
+                "unmet-expectation",
+                "unexpected-score",
+                "compilation-failed",
+                "compilation-warnings",
+                "asset-compilation-warnings",
+                "linter-warnings",
+                "duplicate-test",
+                "bounds-not-hit",
+                "sanitizer-finding",
+                "borderline-tle",
+                "hidden-verdict",
+                "noisy-stderr",
+                "slow-accepted-solution",
+                "untuned-limits",
+                "no-accepted-solution",
+                "no-validator",
+                "no-samples",
+                "empty-test-group",
+                "large-testset",
+                "large-testcase",
+                "missing-statement-language",
+                "explanation-missing-language",
+                "stale-ignore-rule"
+            ],
+            "title": "IssueCode",
+            "type": "string"
+        },
+        "IssuesConfig": {
+            "description": "The `issues:` block of `problem.rbx.yml` and `contest.rbx.yml`.",
+            "properties": {
+                "ignore": {
+                    "default": [],
+                    "description": "Issues not to report for this problem (or, in `contest.rbx.yml`,\nfor every problem of the contest). Each entry is a code, which silences it everywhere, or a\n`{code, on, reason}` rule, which silences it only for what `on` matches. A problem's list adds\nto its contest's. Ignored issues are still listed by `rbx issues --all`.\nSee https://rbx.rsalesc.dev/issues/ for every code.",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/$defs/IssueCode"
+                            },
+                            {
+                                "$ref": "#/$defs/IgnoreRule"
+                            }
+                        ]
+                    },
+                    "title": "Ignore",
+                    "type": "array"
+                }
+            },
+            "title": "IssuesConfig",
             "type": "object"
         },
         "LimitModifiers": {
@@ -599,6 +811,23 @@
             "title": "PackageTiming",
             "type": "object"
         },
+        "PointsScoring": {
+            "description": "Subtasks scoring, configured. Writing `scoring: points` means the defaults.",
+            "properties": {
+                "dependencies": {
+                    "$ref": "#/$defs/DependencyPolicy",
+                    "default": "MANUAL",
+                    "description": "\nWhich dependencies between groups are added on top of the `deps` each group\ndeclares. A group only scores when every group it depends on, directly or not,\nscored too.\n\n- `manual`: none; only the declared `deps`.\n- `samples`: every group depends on `samples`, so failing a sample scores 0.\n- `ladder`: every group depends on the one declared before it, the first one on\n  `samples`, so a group only scores when every earlier one did.\n"
+                },
+                "aggregation": {
+                    "$ref": "#/$defs/Aggregation",
+                    "default": "MIN",
+                    "description": "\nHow the results of a group's tests combine into the group's score, unless the\ngroup sets its own `aggregation`. A test scores 1 when it passes, 0 when it\nfails, and the percentage a checker's `quitp` awards in between.\n\n- `min`: the group scores its `score` times the lowest score among its tests: all\n  of it when every test passes, nothing when any fails.\n- `sum`: each test is worth an even share of the group's `score` and pays it times\n  its own score.\n"
+                }
+            },
+            "title": "PointsScoring",
+            "type": "object"
+        },
         "RecVars": {
             "additionalProperties": {
                 "anyOf": [
@@ -619,6 +848,20 @@
                     }
                 ]
             },
+            "type": "object"
+        },
+        "SamplesAttachment": {
+            "properties": {
+                "samples": {
+                    "description": "Directory inside the attachments archive that receives every sample as `NN.in` / `NN.out`.",
+                    "title": "Samples",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "samples"
+            ],
+            "title": "SamplesAttachment",
             "type": "object"
         },
         "ScoreType": {
@@ -725,7 +968,7 @@
                 "score": {
                     "anyOf": [
                         {
-                            "type": "integer"
+                            "type": "number"
                         },
                         {
                             "maxItems": 2,
@@ -734,7 +977,7 @@
                                 {
                                     "anyOf": [
                                         {
-                                            "type": "integer"
+                                            "type": "number"
                                         },
                                         {
                                             "type": "null"
@@ -744,7 +987,7 @@
                                 {
                                     "anyOf": [
                                         {
-                                            "type": "integer"
+                                            "type": "number"
                                         },
                                         {
                                             "type": "null"
@@ -759,7 +1002,7 @@
                         }
                     ],
                     "default": null,
-                    "description": "The score of this solution in the final score.\nShould either be an integer, which means the solution should have this exact score,\nor a tuple of two integers, which means the solution should have a score between the two integers (inclusive).\n\nIf one of the integers is set to be null, it means that the solution should have a score between the other integer and negative/positive infinity.",
+                    "description": "The score of this solution in the final score.\nShould either be a number, which means the solution should have this exact score,\nor a tuple of two numbers, which means the solution should have a score between the two numbers (inclusive).\nScores are compared rounded to two decimals.\n\nIf one of the numbers is set to be null, it means that the solution should have a score between the other number and negative/positive infinity.",
                     "title": "Score"
                 }
             },
@@ -1047,6 +1290,19 @@
                     "default": null,
                     "description": "The solution visualizer for this problem. Used to produced visualizations for the outputs of the testcases. Has priority over the solution visualizer specified in the package."
                 },
+                "allowDuplicate": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "\nWhether the tests of this group may duplicate other tests, either by being generated\nby the same call or by having the same input. A duplicate pair is only warned about\nwhen neither of its tests allows it.\n\nA subgroup inherits the value of its group unless it sets its own.\n",
+                    "title": "Allowduplicate"
+                },
                 "subgroups": {
                     "default": [],
                     "description": "\nA list of test subgroups to define for this group.\n        ",
@@ -1076,17 +1332,30 @@
                 "score": {
                     "default": 0,
                     "description": "\nThe score of this group in the final score. Useful for\nproblems that have points.\n",
+                    "minimum": 0,
                     "title": "Score",
                     "type": "integer"
                 },
                 "deps": {
                     "default": [],
-                    "description": "\nA list of other groups this group depends on to run and be considered accepted.\n\nThe `samples` group is implicitly a dependency of every other group.\n",
+                    "description": "\nA list of other groups this group depends on to run and be considered accepted.\n\nOnly these are dependencies unless `scoring.dependencies` adds more: set it to\n`samples` to make every group depend on `samples`, or to `ladder` to chain\neach group to the one before it.\n",
                     "items": {
                         "type": "string"
                     },
                     "title": "Deps",
                     "type": "array"
+                },
+                "aggregation": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Aggregation"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "\nHow the results of this group's tests combine into its score; defaults to\n`scoring.aggregation`. Only for problems with points.\n"
                 },
                 "model_solution": {
                     "anyOf": [
@@ -1207,6 +1476,19 @@
                     ],
                     "default": null,
                     "description": "The solution visualizer for this problem. Used to produced visualizations for the outputs of the testcases. Has priority over the solution visualizer specified in the package."
+                },
+                "allowDuplicate": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "\nWhether the tests of this group may duplicate other tests, either by being generated\nby the same call or by having the same input. A duplicate pair is only warned about\nwhen neither of its tests allows it.\n\nA subgroup inherits the value of its group unless it sets its own.\n",
+                    "title": "Allowduplicate"
                 }
             },
             "required": [
@@ -1490,9 +1772,17 @@
             "description": "The type of the problem."
         },
         "scoring": {
-            "$ref": "#/$defs/ScoreType",
             "default": "BINARY",
-            "description": "The scoring type of the problem."
+            "description": "\nThe scoring type of the problem: `binary`, `points`, or a mapping configuring\npoints scoring (`points` is the mapping with every default).\n\n```yaml\nscoring:\n  dependencies: ladder\n```\n",
+            "oneOf": [
+                {
+                    "$ref": "#/$defs/ScoreType"
+                },
+                {
+                    "$ref": "#/$defs/PointsScoring"
+                }
+            ],
+            "title": "Scoring"
         },
         "timeLimit": {
             "description": "Time limit of the problem, in milliseconds.",
@@ -1554,6 +1844,34 @@
             ],
             "default": null,
             "description": "The interactor for this problem."
+        },
+        "grader": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/Grader"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "description": "\nThe grader of a function-call problem (C++ only). It is compiled together with\nevery solution: in a batch problem it owns `main()` and its output goes to the\nchecker; in a communication problem it is the stub that talks to the interactor.\n"
+        },
+        "attachments": {
+            "default": [],
+            "description": "\nFiles given to contestants, packed into one archive per problem (e.g. a public\ngrader, the task header and a solution template).\n",
+            "items": {
+                "anyOf": [
+                    {
+                        "$ref": "#/$defs/FileAttachment"
+                    },
+                    {
+                        "$ref": "#/$defs/SamplesAttachment"
+                    }
+                ]
+            },
+            "title": "Attachments",
+            "type": "array"
         },
         "validator": {
             "anyOf": [
@@ -1683,6 +2001,10 @@
         "unitTests": {
             "$ref": "#/$defs/UnitTests",
             "description": "Unit tests for components of this problem."
+        },
+        "issues": {
+            "$ref": "#/$defs/IssuesConfig",
+            "description": "Which issues `rbx issues` and `rbx run` report for this problem."
         }
     },
     "required": [
