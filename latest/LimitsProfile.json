@@ -1,5 +1,65 @@
 {
     "$defs": {
+        "EstimationSolutionTiming": {
+            "description": "What one solution measured during the estimation of a limits profile.",
+            "properties": {
+                "path": {
+                    "description": "The solution, as named in `problem.rbx.yml`.",
+                    "title": "Path",
+                    "type": "string"
+                },
+                "language": {
+                    "description": "The language it was timed as, which decides its group.",
+                    "title": "Language",
+                    "type": "string"
+                },
+                "role": {
+                    "$ref": "#/$defs/InferenceRole",
+                    "description": "Which side of the limit it bounds: `lower` for an accepted\nsolution, `upper` for one expected to be too slow."
+                },
+                "time": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Its running time, in milliseconds, when it finished. Absent\nfor a slow solution that never finished, or was never run.",
+                    "title": "Time"
+                },
+                "survivedAt": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "For a slow solution that never finished: the highest limit,\nin milliseconds, it was seen still running at. Absent when it finished, or was\nnever run.",
+                    "title": "Survivedat"
+                }
+            },
+            "required": [
+                "path",
+                "language",
+                "role"
+            ],
+            "title": "EstimationSolutionTiming",
+            "type": "object"
+        },
+        "InferenceRole": {
+            "enum": [
+                "LOWER",
+                "UPPER"
+            ],
+            "title": "InferenceRole",
+            "type": "string"
+        },
         "LimitModifiers": {
             "properties": {
                 "timeMultiplier": {
@@ -202,6 +262,19 @@
                     ],
                     "default": null,
                     "description": "What checking this group's slow solutions against its estimated\ntime limit found. Absent when the group has no slow solutions. Presentation-only."
+                },
+                "estimatedTimeLimit": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "The time limit `rbx time` estimated for this group, recorded\nonly when the setter has since changed `timeLimit` by hand with `rbx time --edit`.\nThe bounds and the upper validation of this report were measured against this\nlimit, not against `timeLimit`. Absent while the limit is the estimated one.\nPresentation-only.",
+                    "title": "Estimatedtimelimit"
                 },
                 "lowerViolation": {
                     "anyOf": [
@@ -439,6 +512,22 @@
             "default": null,
             "description": "\nA checksum of everything this estimate was computed from -- the solutions that\nbound the limit, and, when the tests were built, the interactor and the test\ninputs. Written by `rbx time`; consumers compare it against the package to warn\nthat a saved limit predates the current solutions or testset.\n\nPresentation-only; never used for limit resolution. Absent on a profile whose\nlimit was not estimated (inherited from the package, or set by hand).\n",
             "title": "Estimationchecksum"
+        },
+        "solutions": {
+            "anyOf": [
+                {
+                    "items": {
+                        "$ref": "#/$defs/EstimationSolutionTiming"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "description": "\nThe timing of every solution the estimate was computed from. Written by\n`rbx time` and read by `rbx time --edit`, which checks a hand-set limit against\neach solution. Presentation-only; never used for limit resolution. Absent on a\nprofile estimated before it was recorded.\n",
+            "title": "Solutions"
         }
     },
     "title": "LimitsProfile",
