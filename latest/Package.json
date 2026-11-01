@@ -1513,6 +1513,20 @@
                     "description": "Overrides the environment `acToTimeLimit`: the minimum ratio\nbetween the time limit and the slowest accepted solution, which bounds the estimated\ntime limit from below.",
                     "title": "Actotimelimit"
                 },
+                "fastestToTimeLimit": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "number"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Overrides the environment `fastestToTimeLimit`: the minimum\nratio between the time limit and the fastest accepted solution, an additional lower\nbound on top of `acToTimeLimit`. Setting it means the estimate is no longer the Kattis\nrule.",
+                    "title": "Fastesttotimelimit"
+                },
                 "timeLimitToTle": {
                     "anyOf": [
                         {

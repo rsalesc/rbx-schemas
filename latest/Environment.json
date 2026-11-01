@@ -1840,6 +1840,20 @@
                     "title": "Actotimelimit",
                     "type": "number"
                 },
+                "fastestToTimeLimit": {
+                    "anyOf": [
+                        {
+                            "exclusiveMinimum": 0,
+                            "type": "number"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Minimum ratio between the time limit and the fastest accepted\nsolution, an additional lower bound on top of `acToTimeLimit`: the fastest accepted\nsolution times `fastestToTimeLimit` must also fit within the time limit. When set,\nthe estimate is no longer the Kattis rule (which only scales the slowest accepted\nsolution), so a judge that estimates by that rule cannot reproduce it.",
+                    "title": "Fastesttotimelimit"
+                },
                 "timeLimitToTle": {
                     "anyOf": [
                         {
