@@ -52,6 +52,27 @@
             "title": "EstimationSolutionTiming",
             "type": "object"
         },
+        "ExpectedOutcome": {
+            "enum": [
+                "ANY",
+                "ACCEPTED",
+                "ACCEPTED_OR_TLE",
+                "WRONG_ANSWER",
+                "INCORRECT",
+                "PARTIALLY_CORRECT",
+                "RUNTIME_ERROR",
+                "TIME_LIMIT_EXCEEDED",
+                "MEMORY_LIMIT_EXCEEDED",
+                "OUTPUT_LIMIT_EXCEEDED",
+                "TLE_OR_RTE",
+                "MLE_OR_RTE",
+                "TLE_OR_MLE",
+                "JUDGE_FAILED",
+                "COMPILATION_ERROR"
+            ],
+            "title": "ExpectedOutcome",
+            "type": "string"
+        },
         "InferenceRole": {
             "enum": [
                 "LOWER",
@@ -104,6 +125,100 @@
             },
             "title": "LimitModifiers",
             "type": "object"
+        },
+        "LimitsProfileRun": {
+            "description": "How one solution fared when judged at the limit a profile estimated.\n\nNot evidence the limit was computed from -- that is `EstimationSolutionTiming`\n-- but the verdict the rest of the package got under it, recorded by\n`rbx time --run-all` (and `rbx preship`) after the estimate was written.",
+            "properties": {
+                "path": {
+                    "description": "The solution, as named in `problem.rbx.yml`.",
+                    "title": "Path",
+                    "type": "string"
+                },
+                "language": {
+                    "description": "The language it ran as.",
+                    "title": "Language",
+                    "type": "string"
+                },
+                "timeLimit": {
+                    "description": "The time limit, in milliseconds, it was judged at: the\nestimated limit of its language at the time it ran. A limit changed by hand\nafterwards does not change it, so a run can be told apart from the limit it no\nlonger describes.",
+                    "title": "Timelimit",
+                    "type": "integer"
+                },
+                "expectedOutcome": {
+                    "$ref": "#/$defs/ExpectedOutcome",
+                    "description": "The outcome `problem.rbx.yml` expects of it."
+                },
+                "outcome": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Outcome"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "The worst verdict it got. Absent when no testcase was judged."
+                },
+                "matchesExpectation": {
+                    "description": "Whether it behaved as `problem.rbx.yml` says it does.",
+                    "title": "Matchesexpectation",
+                    "type": "boolean"
+                },
+                "time": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Its running time, in milliseconds, on its slowest testcase.\nAbsent when no testcase reported a time.",
+                    "title": "Time"
+                },
+                "complete": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "`false` when the run stopped before judging every testcase\n(`--fail-fast`): its verdict holds, but its time is only a lower bound. Absent\nwhen every testcase was judged.",
+                    "title": "Complete"
+                }
+            },
+            "required": [
+                "path",
+                "language",
+                "timeLimit",
+                "expectedOutcome",
+                "matchesExpectation"
+            ],
+            "title": "LimitsProfileRun",
+            "type": "object"
+        },
+        "Outcome": {
+            "enum": [
+                "accepted",
+                "partially-correct",
+                "skipped",
+                "wrong-answer",
+                "memory-limit-exceeded",
+                "time-limit-exceeded",
+                "idleness-limit-exceeded",
+                "runtime-error",
+                "output-limit-exceeded",
+                "judge-failed",
+                "internal-error",
+                "compilation-error"
+            ],
+            "title": "Outcome",
+            "type": "string"
         },
         "TimingBound": {
             "properties": {
@@ -542,6 +657,22 @@
             "default": null,
             "description": "\nThe timing of every solution the estimate was computed from. Written by\n`rbx time` and read by `rbx time --edit`, which checks a hand-set limit against\neach solution. Presentation-only; never used for limit resolution. Absent on a\nprofile estimated before it was recorded.\n",
             "title": "Solutions"
+        },
+        "runs": {
+            "anyOf": [
+                {
+                    "items": {
+                        "$ref": "#/$defs/LimitsProfileRun"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "description": "\nThe verdict of every solution the estimate did not run, judged at the estimated\nlimit. Written by `rbx time --run-all` and `rbx preship` once those runs finish.\nPresentation-only; never used for limit resolution. Absent when the profile was\nwritten without `--run-all`.\n",
+            "title": "Runs"
         }
     },
     "title": "LimitsProfile",
