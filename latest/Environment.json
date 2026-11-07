@@ -1598,9 +1598,28 @@
         "MojCalibration": {
             "description": "How `rbx time --runner moj` measures solutions on MOJ.",
             "properties": {
+                "runs": {
+                    "default": 1,
+                    "description": "How many times to measure each solution: that many MOJ calibrations, or that many testruns of each solution in `serial` mode. Each testcase keeps one of the times, picked by `pick`.",
+                    "minimum": 1,
+                    "title": "Runs",
+                    "type": "integer"
+                },
+                "pick": {
+                    "default": "max",
+                    "description": "Which of the `runs` times a testcase keeps: `max`, the slowest, or `min`, the fastest. A testcase keeps that run's verdict too.",
+                    "enum": [
+                        "max",
+                        "min"
+                    ],
+                    "title": "Pick",
+                    "type": "string"
+                },
                 "serial": {
-                    "$ref": "#/$defs/MojSerialCalibration",
-                    "description": "Measure with serial testruns instead of a MOJ calibration."
+                    "default": false,
+                    "description": "Estimate `rbx time --runner moj` from serial testruns, one solution and one test at a time, instead of one MOJ calibration that judges every solution at once. Slower, but a solution is never measured next to another one of the same run.",
+                    "title": "Serial",
+                    "type": "boolean"
                 }
             },
             "title": "MojCalibration",
@@ -1627,6 +1646,9 @@
                     "description": "Give every language the same time limit on MOJ (`TLUNIFIED=y` in `conf`): MOJ calibrates it from the worst accepted time across all languages, as if they were one. Per-language limits pinned from the `moj` limits profile still apply on top of it. Toggling it makes MOJ recalibrate the problem.",
                     "title": "Unifiedtimelimit",
                     "type": "boolean"
+                },
+                "package": {
+                    "$ref": "#/$defs/MojPackageSettings"
                 },
                 "calibration": {
                     "$ref": "#/$defs/MojCalibration"
@@ -1690,34 +1712,17 @@
             "title": "MojLanguageExtension",
             "type": "object"
         },
-        "MojSerialCalibration": {
-            "description": "How `rbx time --runner moj` measures when it testruns serially.",
+        "MojPackageSettings": {
+            "description": "How `rbx package moj` asks MOJ to judge the package.",
             "properties": {
-                "enabled": {
+                "serial": {
                     "default": false,
-                    "description": "Estimate `rbx time --runner moj` from serial testruns, one solution and one test at a time, instead of one MOJ calibration that judges every solution at once. Slower, but a solution is never measured next to another one of the same run.",
-                    "title": "Enabled",
+                    "description": "Judge one test at a time (`ALLOWPARALLELTEST=n` in `conf`) and, on an all-or-nothing problem, stop at the first test over the time limit (`STOPWHEN_TLE=y`). Off, MOJ judges the tests in parallel and runs every one past a timeout.",
+                    "title": "Serial",
                     "type": "boolean"
-                },
-                "runs": {
-                    "default": 1,
-                    "description": "How many times to testrun each solution. Each testcase keeps one of the times, picked by `pick`.",
-                    "minimum": 1,
-                    "title": "Runs",
-                    "type": "integer"
-                },
-                "pick": {
-                    "default": "max",
-                    "description": "Which of the `runs` times a testcase keeps: `max`, the slowest, or `min`, the fastest. A testcase keeps that run's verdict too.",
-                    "enum": [
-                        "max",
-                        "min"
-                    ],
-                    "title": "Pick",
-                    "type": "string"
                 }
             },
-            "title": "MojSerialCalibration",
+            "title": "MojPackageSettings",
             "type": "object"
         },
         "PolygonLanguageExtension": {
