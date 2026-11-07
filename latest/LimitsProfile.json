@@ -642,6 +642,19 @@
             "description": "\nA checksum of everything this estimate was computed from -- the solutions that\nbound the limit, and, when the tests were built, the interactor and the test\ninputs. Written by `rbx time`; consumers compare it against the package to warn\nthat a saved limit predates the current solutions or testset.\n\nPresentation-only; never used for limit resolution. Absent on a profile whose\nlimit was not estimated (inherited from the package, or set by hand).\n",
             "title": "Estimationchecksum"
         },
+        "runner": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "description": "\nThe runner the estimate was measured on (`local`, `moj`, ...), as `--runner`\nnames it. Written by `rbx time`; consumers compare it with where a run happened\nbefore showing that run's verdicts beside this profile, since timings taken on\none machine say nothing about another. Presentation-only; never used for limit\nresolution. Absent on a profile written before it was recorded, or not estimated.\n",
+            "title": "Runner"
+        },
         "solutions": {
             "anyOf": [
                 {
