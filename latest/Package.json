@@ -608,6 +608,20 @@
                     "description": "Whether the interactor should capture the pipes.",
                     "title": "Capture",
                     "type": "boolean"
+                },
+                "processes": {
+                    "anyOf": [
+                        {
+                            "minimum": 2,
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "\nHow many copies of the solution run at once against this interactor, as in CMS\n`Communication` with `num_processes`. Each copy gets its 0-based index as its\nfirst command-line argument, and the interactor talks to them through\n`rbx::registerFanoutInteraction`. Unset means a single process.\n",
+                    "title": "Processes"
                 }
             },
             "required": [
